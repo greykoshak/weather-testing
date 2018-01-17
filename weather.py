@@ -1,6 +1,7 @@
 import datetime
 import json
 import urllib.request
+import asyncio
 
 
 def time_converter(time):
@@ -20,15 +21,14 @@ def url_builder(city_id):
 
 
 def data_fetch(full_api_url):
-#    url = urllib.request.urlopen(full_api_url)
-#    output = url.read().decode('utf-8')
-#    raw_api_dict = json.loads(output)
-#    url.close()
-#    return raw_api_dict
+    #    url = urllib.request.urlopen(full_api_url)
+    #    output = url.read().decode('utf-8')
+    #    raw_api_dict = json.loads(output)
+    #    url.close()
+    #    return raw_api_dict
 
     with urllib.request.urlopen(full_api_url) as url:
-      return json.loads(url.read().decode('utf-8'))
-
+        return json.loads(url.read().decode('utf-8'))
 
 
 def data_organizer(raw_data):
@@ -72,7 +72,12 @@ def data_output(data):
 
 
 if __name__ == '__main__':
+#    ioloop = asyncio.get_event_loop()
+#    tasks = [ioloop.create_task(data_fetch()), ioloop.create_task(bar())]
     try:
-        data_output(data_organizer(data_fetch(url_builder('London,uk'))))
+        url = url_builder('London,uk')
+        data_f = data_fetch(url)
+        data_o = data_organizer(data_f)
+        data_output(data_o)
     except IOError:
         print('no internet')
